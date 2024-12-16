@@ -24,7 +24,7 @@ public class FloatDataWriter extends AbstractDataWriter {
     @Override
     public void printStatistics() {
         if (statsOption == AppOption.SHORT_STATS) {
-            System.out.println("Integer Statistics: \nsize:" + stats.size());
+            System.out.println("Float Statistics: \nsize:" + stats.size());
         } else if (statsOption == AppOption.FULL_STATS) {
             System.out.printf(
                     "Float Statistics: \nsize: %d\nmin: %f;\nmax: %f;\nsum: %f;\navg: %f;\n",

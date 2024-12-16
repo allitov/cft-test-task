@@ -27,7 +27,7 @@ public class IntegerDataWriter extends AbstractDataWriter {
             System.out.println("Integer Statistics: \nsize:" + stats.size());
         } else if (statsOption == AppOption.FULL_STATS) {
             System.out.printf(
-                    "Intger Statistics: \nsize: %d\nmin: %d;\nmax: %d;\nsum: %d;\navg: %f;\n",
+                    "Integer Statistics: \nsize: %d\nmin: %d;\nmax: %d;\nsum: %d;\navg: %f;\n",
                     stats.size(),
                     stats.stream().mapToLong(Long::parseLong).min().orElse(0L),
                     stats.stream().mapToLong(Long::parseLong).max().orElse(0L),

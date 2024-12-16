@@ -19,7 +19,7 @@ public class StringDataWriter extends AbstractDataWriter {
     @Override
     public void printStatistics() {
         if (statsOption == AppOption.SHORT_STATS) {
-            System.out.println("Integer Statistics: \nsize:" + stats.size());
+            System.out.println("String Statistics: \nsize:" + stats.size());
         } else if (statsOption == AppOption.FULL_STATS) {
             System.out.printf(
                     "String Statistics: \nsize: %d\nmin len: %d;\nmax len: %d;\n",
