@@ -57,7 +57,7 @@ public class AppOptionsContainer {
         formatter.printUsage(
                 pw,
                 100,
-                "java -jar cft-test-task-1.0-SNAPSHOT-jar-with-dependencies.jar [options] file1 file2 ..."
+                "java -jar cft-test-app.jar [options] file1 file2 ..."
         );
         formatter.printOptions(pw, 100, options, 2, 5);
         pw.close();
