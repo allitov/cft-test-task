@@ -18,15 +18,18 @@ import java.util.Queue;
 public abstract class AbstractDataWriter implements DataWriter, DataTypeValidator, StatisticsCollector {
 
     private final File file;
+    private final boolean appendToFile;
     private final Queue<String> buffer = new LinkedList<>();
     protected final List<String> stats = new ArrayList<>();
     protected final AppOption statsOption;
 
-    public AbstractDataWriter(String fileName, String filePath, String filePrefix, AppOption statsOption) {
+    public AbstractDataWriter(String fileName, String filePath, String filePrefix,
+                              boolean appendToFile, AppOption statsOption) {
         String name = Objects.requireNonNullElse(filePath, "./") +
                 Objects.requireNonNullElse(filePrefix, "") +
                 Objects.requireNonNullElse(fileName, "file.txt");
         this.file = new File(name);
+        this.appendToFile = appendToFile;
         this.statsOption = statsOption;
     }
 
@@ -45,7 +48,7 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
             createFile();
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, appendToFile))) {
             while (!buffer.isEmpty()) {
                 writer.write(buffer.poll());
                 writer.newLine();

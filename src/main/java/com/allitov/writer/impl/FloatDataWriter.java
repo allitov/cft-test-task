@@ -7,8 +7,8 @@ public class FloatDataWriter extends AbstractDataWriter {
 
     private static final String FILE_NAME = "floats.txt";
 
-    public FloatDataWriter(String filePath, String filePrefix, AppOption statsOption) {
-        super(FILE_NAME, filePath, filePrefix, statsOption);
+    public FloatDataWriter(String filePath, String filePrefix, boolean appendToFile, AppOption statsOption) {
+        super(FILE_NAME, filePath, filePrefix, appendToFile, statsOption);
     }
 
     @Override

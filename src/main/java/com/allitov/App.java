@@ -19,6 +19,7 @@ public class App {
         CommandLine options = AppOptionsContainer.getInstance().getOptions();
         String filePath = options.getOptionValue(AppOption.PATH_OPTION.getOption());
         String filePrefix = options.getOptionValue(AppOption.PREFIX_OPTION.getOption());
+        boolean appendToFile = options.hasOption(AppOption.APPEND_FILE.getOption());
         AppOption statsOption = null;
         if (options.hasOption(AppOption.SHORT_STATS.getOption())) {
             statsOption = AppOption.SHORT_STATS;
@@ -27,9 +28,9 @@ public class App {
         }
 
         List<AbstractDataWriter> writers = List.of(
-                new IntegerDataWriter(filePath, filePrefix, statsOption),
-                new FloatDataWriter(filePath, filePrefix, statsOption),
-                new StringDataWriter(filePath, filePrefix, statsOption)
+                new IntegerDataWriter(filePath, filePrefix, appendToFile, statsOption),
+                new FloatDataWriter(filePath, filePrefix, appendToFile, statsOption),
+                new StringDataWriter(filePath, filePrefix, appendToFile, statsOption)
         );
         DataReader reader = new FileDataReader(options.getArgList(), writers);
         reader.read();
