@@ -25,9 +25,7 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
 
     public AbstractDataWriter(String fileName, String filePath, String filePrefix,
                               boolean appendToFile, AppOption statsOption) {
-        String name = Objects.requireNonNullElse(filePath, "./") + "/" +
-                Objects.requireNonNullElse(filePrefix, "") +
-                Objects.requireNonNullElse(fileName, "file.txt");
+        String name = createFileName(fileName, filePath, filePrefix);
         this.file = new File(name);
         this.appendToFile = appendToFile;
         this.statsOption = statsOption;
@@ -44,8 +42,8 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
             return;
         }
 
-        if (!file.exists()) {
-            createFile();
+        if (!file.exists() && !createFile()) {
+            return;
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, appendToFile))) {
@@ -54,7 +52,7 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
                 writer.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Could not write to file: " + file.getAbsolutePath());
         }
     }
 
@@ -65,14 +63,23 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
         }
     }
 
-    private void createFile() {
-        if (file.getParentFile() != null && !file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
+    private String createFileName(String fileName, String filePath, String filePrefix) {
+        filePath = Objects.requireNonNullElse(filePath, "./") + "/";
+        filePrefix = Objects.requireNonNullElse(filePrefix, "").replaceAll("/", "");
+        fileName = Objects.requireNonNullElse(fileName, "file.txt");
+
+        return filePath + filePrefix + fileName;
+    }
+
+    private boolean createFile() {
         try {
-            file.createNewFile();
+            if (file.getParentFile() != null && !file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            return file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Could not create file: " + file.getAbsolutePath());
+            return false;
         }
     }
 }
