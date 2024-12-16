@@ -25,7 +25,7 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
 
     public AbstractDataWriter(String fileName, String filePath, String filePrefix,
                               boolean appendToFile, AppOption statsOption) {
-        String name = Objects.requireNonNullElse(filePath, "./") +
+        String name = Objects.requireNonNullElse(filePath, "./") + "/" +
                 Objects.requireNonNullElse(filePrefix, "") +
                 Objects.requireNonNullElse(fileName, "file.txt");
         this.file = new File(name);
