@@ -1,7 +1,9 @@
-package com.allitov.reader;
+package com.allitov.reader.impl;
 
 import com.allitov.options.AppOption;
 import com.allitov.options.AppOptionsContainer;
+import com.allitov.reader.DataReader;
+import com.allitov.stats.StatisticsCollector;
 import com.allitov.writer.AbstractDataWriter;
 import com.allitov.writer.impl.FloatDataWriter;
 import com.allitov.writer.impl.IntegerDataWriter;
@@ -49,6 +51,9 @@ public class FileDataReader implements DataReader {
         }
         writers.forEach(AbstractDataWriter::flush);
         stringWriter.flush();
+
+        writers.forEach(StatisticsCollector::printStatistics);
+        stringWriter.printStatistics();
     }
 
     private void readFile(File file) {
@@ -69,8 +74,13 @@ public class FileDataReader implements DataReader {
                 .filter(writer -> writer.isValid(value))
                 .findFirst()
                 .ifPresentOrElse(
-                        writer -> writer.addToBuffer(value),
-                        () -> stringWriter.addToBuffer(value)
+                        writer -> {
+                            writer.addToBuffer(value);
+                            writer.addValue(value);
+                            },
+                        () -> {
+                            stringWriter.addToBuffer(value);
+                            stringWriter.addValue(value);}
                 );
     }
 }
