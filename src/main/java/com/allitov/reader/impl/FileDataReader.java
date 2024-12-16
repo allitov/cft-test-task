@@ -1,14 +1,8 @@
 package com.allitov.reader.impl;
 
-import com.allitov.options.AppOption;
-import com.allitov.options.AppOptionsContainer;
 import com.allitov.reader.DataReader;
 import com.allitov.stats.StatisticsCollector;
 import com.allitov.writer.AbstractDataWriter;
-import com.allitov.writer.impl.FloatDataWriter;
-import com.allitov.writer.impl.IntegerDataWriter;
-import com.allitov.writer.impl.StringDataWriter;
-import org.apache.commons.cli.CommandLine;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,23 +18,10 @@ public class FileDataReader implements DataReader {
 
     private final Queue<File> files = new LinkedList<>();
     private final List<AbstractDataWriter> writers = new ArrayList<>();
-    private final AbstractDataWriter stringWriter;
 
-    public FileDataReader(List<String> fileNames) {
+    public FileDataReader(List<String> fileNames, List<AbstractDataWriter> writers) {
         fileNames.forEach(file -> files.add(new File(file)));
-        CommandLine options = AppOptionsContainer.getInstance().getOptions();
-        writers.add(new IntegerDataWriter(
-                options.getOptionValue(AppOption.PATH_OPTION.getOption()),
-                options.getOptionValue(AppOption.PREFIX_OPTION.getOption())
-        ));
-        writers.add(new FloatDataWriter(
-                options.getOptionValue(AppOption.PATH_OPTION.getOption()),
-                options.getOptionValue(AppOption.PREFIX_OPTION.getOption())
-        ));
-        this.stringWriter = new StringDataWriter(
-                options.getOptionValue(AppOption.PATH_OPTION.getOption()),
-                options.getOptionValue(AppOption.PREFIX_OPTION.getOption())
-        );
+        this.writers.addAll(writers);
     }
 
     @Override
@@ -50,10 +31,7 @@ public class FileDataReader implements DataReader {
             readFile(file);
         }
         writers.forEach(AbstractDataWriter::flush);
-        stringWriter.flush();
-
         writers.forEach(StatisticsCollector::printStatistics);
-        stringWriter.printStatistics();
     }
 
     private void readFile(File file) {
@@ -76,11 +54,9 @@ public class FileDataReader implements DataReader {
                 .ifPresentOrElse(
                         writer -> {
                             writer.addToBuffer(value);
-                            writer.addValue(value);
+                            writer.addStats(value);
                             },
-                        () -> {
-                            stringWriter.addToBuffer(value);
-                            stringWriter.addValue(value);}
+                        () -> System.out.println("No writer found for value: " + value)
                 );
     }
 }

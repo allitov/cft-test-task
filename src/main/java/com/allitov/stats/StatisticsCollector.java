@@ -2,6 +2,6 @@ package com.allitov.stats;
 
 public interface StatisticsCollector{
 
-    void addValue(String value);
+    void addStats(String value);
     void printStatistics();
 }

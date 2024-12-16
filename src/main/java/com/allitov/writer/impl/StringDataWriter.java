@@ -7,8 +7,8 @@ public class StringDataWriter extends AbstractDataWriter {
 
     private static final String FILE_NAME = "strings.txt";
 
-    public StringDataWriter(String filePath, String filePrefix) {
-        super(FILE_NAME, filePath, filePrefix);
+    public StringDataWriter(String filePath, String filePrefix, AppOption statsOption) {
+        super(FILE_NAME, filePath, filePrefix, statsOption);
     }
 
     @Override

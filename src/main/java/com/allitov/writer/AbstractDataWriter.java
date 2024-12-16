@@ -1,10 +1,8 @@
 package com.allitov.writer;
 
 import com.allitov.options.AppOption;
-import com.allitov.options.AppOptionsContainer;
 import com.allitov.stats.StatisticsCollector;
 import lombok.Getter;
-import org.apache.commons.cli.CommandLine;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,20 +22,12 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
     protected final List<String> stats = new ArrayList<>();
     protected final AppOption statsOption;
 
-    public AbstractDataWriter(String fileName, String filePath, String filePrefix) {
+    public AbstractDataWriter(String fileName, String filePath, String filePrefix, AppOption statsOption) {
         String name = Objects.requireNonNullElse(filePath, "./") +
                 Objects.requireNonNullElse(filePrefix, "") +
                 Objects.requireNonNullElse(fileName, "file.txt");
         this.file = new File(name);
-
-        CommandLine options = AppOptionsContainer.getInstance().getOptions();
-        if (options.hasOption(AppOption.SHORT_STATS.getOption())) {
-            this.statsOption = AppOption.SHORT_STATS;
-        } else if (options.hasOption(AppOption.FULL_STATS.getOption())) {
-            this.statsOption = AppOption.FULL_STATS;
-        } else {
-            this.statsOption = null;
-        }
+        this.statsOption = statsOption;
     }
 
     @Override
@@ -66,7 +56,7 @@ public abstract class AbstractDataWriter implements DataWriter, DataTypeValidato
     }
 
     @Override
-    public void addValue(String value) {
+    public void addStats(String value) {
         if (statsOption != null) {
             stats.add(value);
         }
